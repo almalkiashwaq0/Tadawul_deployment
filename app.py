@@ -3,7 +3,7 @@ import requests
 import json
 
 # Title of the app
-st.title("KMeans Clustering Prediction App")
+st.title("Stock Data Clustering Project")
 
 # Function to send data to the FastAPI backend and get the prediction
 def get_prediction_from_api(url, input_data):
@@ -16,19 +16,18 @@ def get_prediction_from_api(url, input_data):
         return {"error": "Failed to get a response from the API"}
 
 # Input fields for the user to enter features
-opening = st.number_input("Opening Price", value=1.0)
-top = st.number_input("Top Price", value=1.0)
-lowest = st.number_input("Lowest Price", value=1.0)
-closing = st.number_input("Closing Price", value=1.0)
-change = st.number_input("Change", value=0.0)
-change_percentage = st.number_input("Change Percentage", value=0.0)
+opening = st.slider("Opening Price", min_value=0.0, max_value=1000.0, value=1.0, step=0.1)
+top = st.slider("Top Price", min_value=0.0, max_value=1000.0, value=1.0, step=0.1)
+lowest = st.slider("Lowest Price", min_value=0.0, max_value=700.0, value=1.0, step=0.1)
+closing = st.slider("Closing Price", min_value=0.0, max_value=1000.0, value=1.0, step=0.1)
+change = st.slider("Change", min_value=-200.0, max_value=200.0, value=0.0, step=0.1)
+change_percentage = st.slider("Change Percentage", min_value=-100.0, max_value=200.0, value=0.0, step=0.1)
 
-# URL of the FastAPI backend (your Render deployment)
+
 api_url = "https://tadawul-deployment.onrender.com/predict"
 
 # Button to make a prediction
 if st.button("Predict Cluster"):
-    # Prepare the input data in the format expected by the API
     input_data = {
         "Opening": opening,
         "Top": top,
