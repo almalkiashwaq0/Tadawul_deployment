@@ -47,5 +47,3 @@ if st.button("Predict Cluster"):
     else:
         st.error(f"Error: {result.get('error', 'Unknown error')}")
 
-# Instructions for sharing the app
-st.write("To share this app, you can deploy it using Streamlit sharing or other cloud platforms.")
