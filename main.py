@@ -6,20 +6,19 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-    return "Welcome To Tuwaiq Academy"
+    return "Welcome To Stock Data Clustering Project"
 
-# Load models
-model = joblib.load("kmeans_8_model.joblib")
-scaler_model = joblib.load("scaler_8_model.joblib")
 
-# Define input feature class
+model = joblib.load('dbscan_model.joblib')
+scaler_model = joblib.load('robust1_scaler.joblib')
+
 class InputFeatures(BaseModel):
     Opening: float
     Top: float
     Lowest: float
     Closing: float
     Change: float
-    ChangePercentage: float  # Changed 'Change %' to 'ChangePercentage' to avoid syntax issues
+    ChangePercentage: float 
 
 def preprocessing(input_features: InputFeatures):
     dict_f = {
@@ -28,23 +27,21 @@ def preprocessing(input_features: InputFeatures):
         'Lowest': input_features.Lowest,
         'Closing': input_features.Closing,
         'Change': input_features.Change,
-        'ChangePercentage': input_features.ChangePercentage,  # Use the modified key
+        'ChangePercentage': input_features.ChangePercentage, 
     }
 
-    # Convert dictionary to sorted feature list
+    
     features_list = [dict_f[key] for key in sorted(dict_f)]
 
-    # Scale features
     scaled_features = scaler_model.transform([features_list])
 
     return scaled_features
 
 @app.post("/predict")
 async def predict(input_features: InputFeatures):
-    # Preprocess input features
+    
     data = preprocessing(input_features)
 
-    # Predict using the model
-    y_pred = model.predict(data)  # Use predict instead of fit_predict
+    y_pred = model.fit_predict(data) 
     
     return {"pred": y_pred.tolist()[0]}
